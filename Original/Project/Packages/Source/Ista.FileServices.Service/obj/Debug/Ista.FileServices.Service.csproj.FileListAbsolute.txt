@@ -1,0 +1,31 @@
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\miramar.config
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\nlog.config
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Ista.FileServices.Service.exe.config
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Ista.FileServices.Service.exe
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Ista.FileServices.Service.pdb
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Ista.FileServices.Infrastructure.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Ista.Miramar.Interfaces.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\NLog.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\StructureMap.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\RabbitMQ.Client.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\SecureBlackbox.PKI.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\SecureBlackbox.FTPS.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Dart.PowerTCP.Ftp.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Renci.SshNet.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\SecureBlackbox.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\SecureBlackbox.SSLClient.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\SecureBlackbox.SSLCommon.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\SecureBlackbox.PGP.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Ista.FileServices.Infrastructure.pdb
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Ista.Miramar.Interfaces.pdb
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\NLog.xml
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\StructureMap.xml
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\RabbitMQ.Client.xml
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\obj\Debug\Ista.FileServices.Service.csprojResolveAssemblyReference.cache
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\obj\Debug\Ista.FileServices.Service.exe
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.FileServices.Service\obj\Debug\Ista.FileServices.Service.pdb
+C:\Users\Eldin\Documents\Git\Original\Project\Packages\Source\Ista.FileServices.Service\bin\Debug\Ista.FileServices.Service.exe.config
+C:\Users\Eldin\Documents\Git\Original\Project\Packages\Source\Ista.FileServices.Service\obj\Debug\Ista.FileServices.Service.exe
+C:\Users\Eldin\Documents\Git\Original\Project\Packages\Source\Ista.FileServices.Service\obj\Debug\Ista.FileServices.Service.pdb

@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{61E9149E-5325-401A-8405-F39A052B227D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ista.FileServices.Service</RootNamespace>
+    <AssemblyName>Ista.FileServices.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnitTests|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <OutputPath>bin\x86\UnitTests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnitTests|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <OutputPath>bin\x86\UnitTests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Libraries\NLog\2.0\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\..\Libraries\StructureMap\2.6.1\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Contexts\ActiveTaskContext.cs" />
+    <Compile Include="Elements\AbstractElement.cs" />
+    <Compile Include="Elements\ConfigurationElement.cs" />
+    <Compile Include="Elements\ContinuousElement.cs" />
+    <Compile Include="Elements\ExecutionElement.cs" />
+    <Compile Include="Elements\ExecutionTypeElement.cs" />
+    <Compile Include="Elements\ExecutionTypeItemElement.cs" />
+    <Compile Include="Elements\MetaElement.cs" />
+    <Compile Include="Elements\ScheduledElement.cs" />
+    <Compile Include="Elements\TaskElement.cs" />
+    <Compile Include="Enumerations\ElementTypes.cs" />
+    <Compile Include="Enumerations\ExecutionTypes.cs" />
+    <Compile Include="Handlers\HandlerAddSchedule.cs" />
+    <Compile Include="Handlers\HandlerChangeLogging.cs" />
+    <Compile Include="Handlers\HandlerChangeSchedule.cs" />
+    <Compile Include="Handlers\HandlerPublishConfiguration.cs" />
+    <Compile Include="Handlers\HandlerPublishSchedule.cs" />
+    <Compile Include="Handlers\HandlerRemoveSchedule.cs" />
+    <Compile Include="Handlers\HandlerResumeSchedule.cs" />
+    <Compile Include="Handlers\HandlerStopTask.cs" />
+    <Compile Include="Interfaces\IMiramarContextProvider.cs" />
+    <Compile Include="Interfaces\IMiramarPublisher.cs" />
+    <Compile Include="Interfaces\IMiramarScheduleProvider.cs" />
+    <Compile Include="Interfaces\IMiramarTaskProvider.cs" />
+    <Compile Include="Interfaces\IScheduleMessageHandler.cs" />
+    <Compile Include="MiramarContextProvider.cs" />
+    <Compile Include="MiramarController.cs" />
+    <Compile Include="DataAccess\AdminDataAccess.cs" />
+    <Compile Include="Interfaces\IAdminDataAccess.cs" />
+    <Compile Include="MiramarPublisher.cs" />
+    <Compile Include="MiramarScheduleProvider.cs" />
+    <Compile Include="MiramarTaskProvider.cs" />
+    <Compile Include="Models\ClientInfoModel.cs" />
+    <Compile Include="Models\ExecutionRequestItemModel.cs" />
+    <Compile Include="Models\ExecutionRequestModel.cs" />
+    <Compile Include="Models\ExecutionRequestScheduleModel.cs" />
+    <Compile Include="Models\TaskConfigurationModel.cs" />
+    <Compile Include="Models\TaskScheduleContinuousModel.cs" />
+    <Compile Include="Models\TaskScheduleDateTimeModel.cs" />
+    <Compile Include="Models\TaskScheduleItemModel.cs" />
+    <Compile Include="Models\TaskScheduleModel.cs" />
+    <Compile Include="Models\TaskScheduleRequestModel.cs" />
+    <Compile Include="Parsers\MiramarConfigurationParser.cs" />
+    <Compile Include="Parsers\MiramarSchedulingParser.cs" />
+    <Compile Include="Parsers\MiramarVisitor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScheduleService.cs" />
+    <Compile Include="Service.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Service.Designer.cs">
+      <DependentUpon>Service.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceHostInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ServiceHostInstaller.Designer.cs">
+      <DependentUpon>ServiceHostInstaller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Configs\IH\DC\Ista.FileServices.Service.exe.config" />
+    <None Include="Configs\IH\DR\Ista.FileServices.Service.exe.config" />
+    <None Include="Configs\IH\PR\Ista.FileServices.Service.exe.config" />
+    <None Include="Configs\IH\QC\Ista.FileServices.Service.exe.config" />
+    <None Include="Configs\IH\UA\Ista.FileServices.Service.exe.config" />
+    <None Include="miramar.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ista.FileServices.Infrastructure\Ista.FileServices.Infrastructure.csproj">
+      <Project>{EB976E20-701F-4598-8C4D-ED1A6C40E77A}</Project>
+      <Name>Ista.FileServices.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ista.Miramar.Interfaces\Ista.Miramar.Interfaces.csproj">
+      <Project>{F57555C9-DA6A-456E-B562-03C806F98874}</Project>
+      <Name>Ista.Miramar.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

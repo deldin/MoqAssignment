@@ -1,0 +1,4 @@
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.Miramar.Interfaces\bin\Debug\Ista.Miramar.Interfaces.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.Miramar.Interfaces\bin\Debug\Ista.Miramar.Interfaces.pdb
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.Miramar.Interfaces\obj\Debug\Ista.Miramar.Interfaces.dll
+C:\Users\Maninder Banis\Desktop\ISTA\hackathon\hack2\Project\Packages\Source\Ista.Miramar.Interfaces\obj\Debug\Ista.Miramar.Interfaces.pdb

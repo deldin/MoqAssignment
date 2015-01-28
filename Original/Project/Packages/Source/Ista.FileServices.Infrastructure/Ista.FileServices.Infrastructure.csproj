@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EB976E20-701F-4598-8C4D-ED1A6C40E77A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ista.FileServices.Infrastructure</RootNamespace>
+    <AssemblyName>Ista.FileServices.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnitTests|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\UnitTests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dart.PowerTCP.Ftp">
+      <HintPath>..\..\..\Libraries\Dart.PowerTCP\2.2.5\Dart.PowerTCP.Ftp.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Services2">
+      <HintPath>..\..\..\Libraries\Microsoft\Microsoft.Web.Services2.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\Libraries\Newtonsoft.Json\4.5.11\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Libraries\NLog\2.0\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog.Extended, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Libraries\NLog\2.0\NLog.Extended.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.Client">
+      <HintPath>..\..\..\Libraries\RabbitMQ\2.8.4\RabbitMQ.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Renci.SshNet">
+      <HintPath>..\..\..\Libraries\Ssh.Net\2013.4.7\Net40\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="SecureBlackbox">
+      <HintPath>..\..\..\Libraries\SecureBlackbox\4.4\SecureBlackbox.dll</HintPath>
+    </Reference>
+    <Reference Include="SecureBlackbox.FTPS">
+      <HintPath>..\..\..\Libraries\SecureBlackbox\4.4\SecureBlackbox.FTPS.dll</HintPath>
+    </Reference>
+    <Reference Include="SecureBlackbox.PGP">
+      <HintPath>..\..\..\Libraries\SecureBlackbox\4.4\SecureBlackbox.PGP.dll</HintPath>
+    </Reference>
+    <Reference Include="SecureBlackbox.PKI, Version=4.4.0.94, Culture=neutral, PublicKeyToken=c45703f7b09c3fa9">
+      <HintPath>..\..\..\Libraries\SecureBlackbox\4.4\SecureBlackbox.PKI.dll</HintPath>
+    </Reference>
+    <Reference Include="SecureBlackbox.SSLClient">
+      <HintPath>..\..\..\Libraries\SecureBlackbox\4.4\SecureBlackbox.SSLClient.dll</HintPath>
+    </Reference>
+    <Reference Include="SecureBlackbox.SSLCommon">
+      <HintPath>..\..\..\Libraries\SecureBlackbox\4.4\SecureBlackbox.SSLCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Encoders\EncoderBestAttemptFallback.cs" />
+    <Compile Include="Encoders\EncoderBestAttemptFallbackBuffer.cs" />
+    <Compile Include="Encryption\PgpEncryption.cs" />
+    <Compile Include="Extensions\SqlCommandExtensions.cs" />
+    <Compile Include="Extensions\SqlConnectionExtensions.cs" />
+    <Compile Include="Extensions\SqlDataOrdinalReader.cs" />
+    <Compile Include="Extensions\SqlDataReaderExtensions.cs" />
+    <Compile Include="Extensions\StringArrayExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\XmlExtensions.cs" />
+    <Compile Include="FtpHandlers\DartFtpFactory.cs" />
+    <Compile Include="FtpHandlers\DartFtpHandler.cs" />
+    <Compile Include="FtpHandlers\SecureBlackboxFtpConfiguration.cs" />
+    <Compile Include="FtpHandlers\SecureBlackboxFtpFactory.cs" />
+    <Compile Include="FtpHandlers\SecureBlackboxFtpHandler.cs" />
+    <Compile Include="FtpHandlers\SshFtpFactory.cs" />
+    <Compile Include="FtpHandlers\SshFtpHandler.cs" />
+    <Compile Include="InfrastructureFactory.cs" />
+    <Compile Include="Interfaces\IFtpHandler.cs" />
+    <Compile Include="Interfaces\IIstaMessage.cs" />
+    <Compile Include="Interfaces\IIstaMessageProperties.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Interfaces\IMessageQueueFactory.cs" />
+    <Compile Include="Interfaces\IMessageQueuePublisher.cs" />
+    <Compile Include="Interfaces\IMessageQueueService.cs" />
+    <Compile Include="Interfaces\IPgpEncryption.cs" />
+    <Compile Include="Logging\ExceptionFormatter.cs" />
+    <Compile Include="Logging\FrameworkDatabaseAdapter.cs" />
+    <Compile Include="Logging\FrameworkFileAdapter.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\QueueAdapter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransmitProtocols\Handlers\GisbHandler.cs" />
+    <Compile Include="TransmitProtocols\Handlers\HttpUtility.cs" />
+    <Compile Include="TransmitProtocols\Handlers\NaesbHandler.cs" />
+    <Compile Include="TransmitProtocols\ProtocolFtp.cs" />
+    <Compile Include="TransmitProtocols\ProtocolGisbHttp.cs" />
+    <Compile Include="TransmitProtocols\ProtocolNaesbHttp.cs" />
+    <Compile Include="TransmitProtocols\ProtocolSoap.cs" />
+    <Compile Include="TransmitProtocols\Proxies\GisbProxyService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Queuing\IstaConsumer.cs" />
+    <Compile Include="Queuing\IstaMessage.cs" />
+    <Compile Include="Queuing\IstaMessageProperties.cs" />
+    <Compile Include="Queuing\IstaQueue.cs" />
+    <Compile Include="Queuing\MessageQueueFactory.cs" />
+    <Compile Include="Queuing\MessageQueuePublisher.cs" />
+    <Compile Include="Queuing\MessageQueueService.cs" />
+    <Compile Include="Serializers\JsonMessageSerializer.cs" />
+    <Compile Include="..\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="TransmitProtocols\TransmitResult.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

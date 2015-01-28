@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2325CEC7-114E-408A-AE9C-6F156965F6F1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ista.FileServices.MarketFiles</RootNamespace>
+    <AssemblyName>Ista.FileServices.MarketFiles</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnitTests|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <OutputPath>bin\UnitTests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractErcotFileTask.cs" />
+    <Compile Include="Contexts\DecryptFileContext.cs" />
+    <Compile Include="Contexts\EncryptFileContext.cs" />
+    <Compile Include="Contexts\ErcotFileContext.cs" />
+    <Compile Include="Contexts\ExportFileContext.cs" />
+    <Compile Include="Contexts\ImportFileContext.cs" />
+    <Compile Include="Contexts\TransmitFileContext.cs" />
+    <Compile Include="DataAccess\AdminDataAccess.cs" />
+    <Compile Include="DataAccess\ClientDataAccess.cs" />
+    <Compile Include="DataAccess\Export814SsxDataAccess.cs" />
+    <Compile Include="DataAccess\Export650PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Export650XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Export810PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Export810XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Export814PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Export814XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Export820PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Export820XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Export824PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Export824XmlDataAccess.cs" />
+    <Compile Include="DataAccess\ExportCustomerInfoDataAccess.cs" />
+    <Compile Include="DataAccess\Import248XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Import650PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Import650XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Import810PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Import810XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Import814PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Import814XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Import820PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Import820XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Import824PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Import824XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Import867PrismDataAccess.cs" />
+    <Compile Include="DataAccess\Import867XmlDataAccess.cs" />
+    <Compile Include="DataAccess\Import997XmlDataAccess.cs" />
+    <Compile Include="DataAccess\ImportCustomerInfoDataAccess.cs" />
+    <Compile Include="DataAccess\MarketDataAccess.cs" />
+    <Compile Include="DecryptFileTask.cs" />
+    <Compile Include="EncryptFileTask.cs" />
+    <Compile Include="Enumerations\CustomerInfoFileStatusOptions.cs" />
+    <Compile Include="Enumerations\MarketFileStatusOptions.cs" />
+    <Compile Include="Enumerations\MarketOptions.cs" />
+    <Compile Include="Enumerations\Type248Types.cs" />
+    <Compile Include="Enumerations\Type568Types.cs" />
+    <Compile Include="Enumerations\Type650Types.cs" />
+    <Compile Include="Enumerations\Type810Types.cs" />
+    <Compile Include="Enumerations\Type814Types.cs" />
+    <Compile Include="Enumerations\Type820Types.cs" />
+    <Compile Include="Enumerations\Type824Types.cs" />
+    <Compile Include="Enumerations\Type867Types.cs" />
+    <Compile Include="Enumerations\Type997Types.cs" />
+    <Compile Include="Enumerations\TypeCustomerInfoTypes.cs" />
+    <Compile Include="ErcotEncryptFileTask.cs" />
+    <Compile Include="ErcotTransmitFileTask.cs" />
+    <Compile Include="ExportMarketFileTask.cs" />
+    <Compile Include="Factories\ExportContextFactory.cs" />
+    <Compile Include="Factories\ExportHandlerFactory.cs" />
+    <Compile Include="Factories\ExportParserFactory.cs" />
+    <Compile Include="Factories\ImportContextFactory.cs" />
+    <Compile Include="Factories\ImportHandlerFactory.cs" />
+    <Compile Include="Factories\ImportParserFactory.cs" />
+    <Compile Include="Handlers\Export650Handler.cs" />
+    <Compile Include="Handlers\Export810Handler.cs" />
+    <Compile Include="Handlers\Export814Handler.cs" />
+    <Compile Include="Handlers\Export820Handler.cs" />
+    <Compile Include="Handlers\Export824Handler.cs" />
+    <Compile Include="Handlers\ExportCustomerInfoHandler.cs" />
+    <Compile Include="Handlers\Import248Handler.cs" />
+    <Compile Include="Handlers\Import650Handler.cs" />
+    <Compile Include="Handlers\Import810Handler.cs" />
+    <Compile Include="Handlers\Import814Handler.cs" />
+    <Compile Include="Handlers\Import820Handler.cs" />
+    <Compile Include="Handlers\Import824Handler.cs" />
+    <Compile Include="Handlers\Import867Handler.cs" />
+    <Compile Include="Handlers\Import997Handler.cs" />
+    <Compile Include="Handlers\ImportClientInfoHandler.cs" />
+    <Compile Include="ImportMarketFileTask.cs" />
+    <Compile Include="Interfaces\IAdminDataAccess.cs" />
+    <Compile Include="Interfaces\IClientCustomerInfoExport.cs" />
+    <Compile Include="Interfaces\IClientCustomerInfoImport.cs" />
+    <Compile Include="Interfaces\IClientDataAccess.cs" />
+    <Compile Include="Interfaces\IExportTransactionHandler.cs" />
+    <Compile Include="Interfaces\IImportTransactionHandler.cs" />
+    <Compile Include="Interfaces\IMarket248Import.cs" />
+    <Compile Include="Interfaces\IMarket568Import.cs" />
+    <Compile Include="Interfaces\IMarket650Export.cs" />
+    <Compile Include="Interfaces\IMarket650Import.cs" />
+    <Compile Include="Interfaces\IMarket810Export.cs" />
+    <Compile Include="Interfaces\IMarket810Import.cs" />
+    <Compile Include="Interfaces\IMarket814Export.cs" />
+    <Compile Include="Interfaces\IMarket814Import.cs" />
+    <Compile Include="Interfaces\IMarket820Export.cs" />
+    <Compile Include="Interfaces\IMarket820Import.cs" />
+    <Compile Include="Interfaces\IMarket824Export.cs" />
+    <Compile Include="Interfaces\IMarket824Import.cs" />
+    <Compile Include="Interfaces\IMarket867Import.cs" />
+    <Compile Include="Interfaces\IMarket997Import.cs" />
+    <Compile Include="Interfaces\IMarketDataAccess.cs" />
+    <Compile Include="Interfaces\IMarketFile.cs" />
+    <Compile Include="Interfaces\IMarketFileExporter.cs" />
+    <Compile Include="Interfaces\IMarketFileExportResult.cs" />
+    <Compile Include="Interfaces\IMarketFileParser.cs" />
+    <Compile Include="Interfaces\IMarketFileParseResult.cs" />
+    <Compile Include="Interfaces\IMarketHeaderModel.cs" />
+    <Compile Include="MarketFileModels\IType248Model.cs" />
+    <Compile Include="MarketFileModels\IType568Model.cs" />
+    <Compile Include="MarketFileModels\IType650Model.cs" />
+    <Compile Include="MarketFileModels\IType810Model.cs" />
+    <Compile Include="MarketFileModels\IType814Model.cs" />
+    <Compile Include="MarketFileModels\IType820Model.cs" />
+    <Compile Include="MarketFileModels\IType824Model.cs" />
+    <Compile Include="MarketFileModels\IType867Model.cs" />
+    <Compile Include="MarketFileModels\IType997Model.cs" />
+    <Compile Include="MarketFileModels\ITypeCustomerInfoModel.cs" />
+    <Compile Include="MarketFileModels\Type248Detail.cs" />
+    <Compile Include="MarketFileModels\Type248Header.cs" />
+    <Compile Include="MarketFileModels\Type568Detail.cs" />
+    <Compile Include="MarketFileModels\Type568Header.cs" />
+    <Compile Include="MarketFileModels\Type650Header.cs" />
+    <Compile Include="MarketFileModels\Type650Name.cs" />
+    <Compile Include="MarketFileModels\Type650Service.cs" />
+    <Compile Include="MarketFileModels\Type650ServiceChange.cs" />
+    <Compile Include="MarketFileModels\Type650ServiceMeter.cs" />
+    <Compile Include="MarketFileModels\Type650ServicePole.cs" />
+    <Compile Include="MarketFileModels\Type650ServiceReject.cs" />
+    <Compile Include="MarketFileModels\Type810Balance.cs" />
+    <Compile Include="MarketFileModels\Type810Detail.cs" />
+    <Compile Include="MarketFileModels\Type810DetailItem.cs" />
+    <Compile Include="MarketFileModels\Type810DetailItemCharge.cs" />
+    <Compile Include="MarketFileModels\Type810DetailItemService.cs" />
+    <Compile Include="MarketFileModels\Type810DetailItemTax.cs" />
+    <Compile Include="MarketFileModels\Type810DetailService.cs" />
+    <Compile Include="MarketFileModels\Type810DetailTax.cs" />
+    <Compile Include="MarketFileModels\Type810Header.cs" />
+    <Compile Include="MarketFileModels\Type810Message.cs" />
+    <Compile Include="MarketFileModels\Type810Name.cs" />
+    <Compile Include="MarketFileModels\Type810Note.cs" />
+    <Compile Include="MarketFileModels\Type810Payment.cs" />
+    <Compile Include="MarketFileModels\Type810Summary.cs" />
+    <Compile Include="MarketFileModels\Type810SummaryService.cs" />
+    <Compile Include="MarketFileModels\Type810SummaryTax.cs" />
+    <Compile Include="MarketFileModels\Type814Header.cs" />
+    <Compile Include="MarketFileModels\Type814Name.cs" />
+    <Compile Include="MarketFileModels\Type814Service.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceAccountChange.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceDate.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceMeter.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceMeterChange.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceMeterContact.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceMeterReject.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceMeterTou.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceMeterType.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceReject.cs" />
+    <Compile Include="MarketFileModels\Type814ServiceStatus.cs" />
+    <Compile Include="MarketFileModels\Type814Summary.cs" />
+    <Compile Include="MarketFileModels\Type820Detail.cs" />
+    <Compile Include="MarketFileModels\Type820Header.cs" />
+    <Compile Include="MarketFileModels\Type824Header.cs" />
+    <Compile Include="MarketFileModels\Type824Reason.cs" />
+    <Compile Include="MarketFileModels\Type824Reference.cs" />
+    <Compile Include="MarketFileModels\Type824TechError.cs" />
+    <Compile Include="MarketFileModels\Type867AccountBillQty.cs" />
+    <Compile Include="MarketFileModels\Type867GasProfileFactorEvaluation.cs" />
+    <Compile Include="MarketFileModels\Type867GasProfileFactorSample.cs" />
+    <Compile Include="MarketFileModels\Type867Header.cs" />
+    <Compile Include="MarketFileModels\Type867IntervalDetail.cs" />
+    <Compile Include="MarketFileModels\Type867IntervalDetailQty.cs" />
+    <Compile Include="MarketFileModels\Type867IntervalSummary.cs" />
+    <Compile Include="MarketFileModels\Type867IntervalSummaryAcrossMeters.cs" />
+    <Compile Include="MarketFileModels\Type867IntervalSummaryAcrossMetersQty.cs" />
+    <Compile Include="MarketFileModels\Type867IntervalSummaryQty.cs" />
+    <Compile Include="MarketFileModels\Type867Name.cs" />
+    <Compile Include="MarketFileModels\Type867NetIntervalSummary.cs" />
+    <Compile Include="MarketFileModels\Type867NetIntervalSummaryQty.cs" />
+    <Compile Include="MarketFileModels\Type867NonIntervalDetail.cs" />
+    <Compile Include="MarketFileModels\Type867NonIntervalDetailQty.cs" />
+    <Compile Include="MarketFileModels\Type867NonIntervalDetailQtyStatus.cs" />
+    <Compile Include="MarketFileModels\Type867NonIntervalSummary.cs" />
+    <Compile Include="MarketFileModels\Type867NonIntervalSummaryQty.cs" />
+    <Compile Include="MarketFileModels\Type867ScheduleDeterminants.cs" />
+    <Compile Include="MarketFileModels\Type867Summary.cs" />
+    <Compile Include="MarketFileModels\Type867Switch.cs" />
+    <Compile Include="MarketFileModels\Type867SwitchQty.cs" />
+    <Compile Include="MarketFileModels\Type867UnMeterDetail.cs" />
+    <Compile Include="MarketFileModels\Type867UnMeterDetailQty.cs" />
+    <Compile Include="MarketFileModels\Type867UnMeterSummary.cs" />
+    <Compile Include="MarketFileModels\Type867UnMeterSummaryQty.cs" />
+    <Compile Include="MarketFileModels\Type997Header.cs" />
+    <Compile Include="MarketFileModels\Type997Response.cs" />
+    <Compile Include="MarketFileModels\Type997ResponseNote.cs" />
+    <Compile Include="MarketFileModels\TypeCustomerInfoErrorRecord.cs" />
+    <Compile Include="MarketFileModels\TypeCustomerInfoFile.cs" />
+    <Compile Include="MarketFileModels\TypeCustomerInfoRecord.cs" />
+    <Compile Include="MiramarTaskFactory.cs" />
+    <Compile Include="Models\CspDunsModel.cs" />
+    <Compile Include="Models\CspDunsPortModel.cs" />
+    <Compile Include="Models\CspDunsTradingPartnerModel.cs" />
+    <Compile Include="Models\CustomerArSummaryModel.cs" />
+    <Compile Include="Models\CustomerDetailModel.cs" />
+    <Compile Include="Models\CustomerInvoiceConfigModel.cs" />
+    <Compile Include="Models\CustomerPremiseModel.cs" />
+    <Compile Include="Models\Export650Model.cs" />
+    <Compile Include="Models\Export810Model.cs" />
+    <Compile Include="Models\Export814Model.cs" />
+    <Compile Include="Models\Export820Model.cs" />
+    <Compile Include="Models\Export824Model.cs" />
+    <Compile Include="Models\ExportConfigurationModel.cs" />
+    <Compile Include="Models\ExportCustomerInfoModel.cs" />
+    <Compile Include="Models\Import248Model.cs" />
+    <Compile Include="Models\Import650Model.cs" />
+    <Compile Include="Models\Import810Model.cs" />
+    <Compile Include="Models\Import814Model.cs" />
+    <Compile Include="Models\Import820Model.cs" />
+    <Compile Include="Models\Import824Model.cs" />
+    <Compile Include="Models\Import867Model.cs" />
+    <Compile Include="Models\Import997Model.cs" />
+    <Compile Include="Models\ImportConfigurationModel.cs" />
+    <Compile Include="Models\ImportCustomerInfoModel.cs" />
+    <Compile Include="Models\LdcModel.cs" />
+    <Compile Include="Models\MarketFileModel.cs" />
+    <Compile Include="Models\MeterConsumptionModel.cs" />
+    <Compile Include="Models\ProviderModel.cs" />
+    <Compile Include="Parsers\Export814Ssx.cs" />
+    <Compile Include="Parsers\Export650Prism.cs" />
+    <Compile Include="Parsers\Export650Xml.cs" />
+    <Compile Include="Parsers\Export810Prism.cs" />
+    <Compile Include="Parsers\Export810Xml.cs" />
+    <Compile Include="Parsers\Export814Prism.cs" />
+    <Compile Include="Parsers\Export814Xml.cs" />
+    <Compile Include="Parsers\Export820Prism.cs" />
+    <Compile Include="Parsers\Export820Xml.cs" />
+    <Compile Include="Parsers\Export824Prism.cs" />
+    <Compile Include="Parsers\Export824Xml.cs" />
+    <Compile Include="Parsers\ExportContexts\Prism650Context.cs" />
+    <Compile Include="Parsers\ExportContexts\Prism810Context.cs" />
+    <Compile Include="Parsers\ExportContexts\Prism814Context.cs" />
+    <Compile Include="Parsers\ExportContexts\Prism820Context.cs" />
+    <Compile Include="Parsers\ExportContexts\Prism824Context.cs" />
+    <Compile Include="Parsers\ExportContexts\PrismCustomerInfoContext.cs" />
+    <Compile Include="Parsers\ExportCustomerInfoPrism.cs" />
+    <Compile Include="Parsers\Import248Xml.cs" />
+    <Compile Include="Parsers\Import650Prism.cs" />
+    <Compile Include="Parsers\Import650Xml.cs" />
+    <Compile Include="Parsers\Import810Prism.cs" />
+    <Compile Include="Parsers\Import810Xml.cs" />
+    <Compile Include="Parsers\Import814Prism.cs" />
+    <Compile Include="Parsers\Import814Xml.cs" />
+    <Compile Include="Parsers\Import820Prism.cs" />
+    <Compile Include="Parsers\Import820Xml.cs" />
+    <Compile Include="Parsers\Import824Prism.cs" />
+    <Compile Include="Parsers\Import824Xml.cs" />
+    <Compile Include="Parsers\Import867Prism.cs" />
+    <Compile Include="Parsers\Import867Xml.cs" />
+    <Compile Include="Parsers\Import997Xml.cs" />
+    <Compile Include="Parsers\ImportContexts\Prism650Context.cs" />
+    <Compile Include="Parsers\ImportContexts\Prism810Context.cs" />
+    <Compile Include="Parsers\ImportContexts\Prism814Context.cs" />
+    <Compile Include="Parsers\ImportContexts\Prism820Context.cs" />
+    <Compile Include="Parsers\ImportContexts\Prism824Context.cs" />
+    <Compile Include="Parsers\ImportContexts\Prism867Context.cs" />
+    <Compile Include="Parsers\ImportContexts\PrismCustomerInfoContext.cs" />
+    <Compile Include="Parsers\ImportCustomerInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransmitFileTask.cs" />
+    <Compile Include="..\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ista.FileServices.Infrastructure\Ista.FileServices.Infrastructure.csproj">
+      <Project>{EB976E20-701F-4598-8C4D-ED1A6C40E77A}</Project>
+      <Name>Ista.FileServices.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ista.Miramar.Interfaces\Ista.Miramar.Interfaces.csproj">
+      <Project>{F57555C9-DA6A-456E-B562-03C806F98874}</Project>
+      <Name>Ista.Miramar.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

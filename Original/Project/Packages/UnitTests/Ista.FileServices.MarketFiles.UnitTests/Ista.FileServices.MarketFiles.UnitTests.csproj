@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{15E78A14-2329-4E8C-837D-F0C11F20E0AD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ista.FileServices.MarketFiles.UnitTests</RootNamespace>
+    <AssemblyName>Ista.FileServices.MarketFiles.UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnitTests|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <OutputPath>bin\UnitTests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\..\Libraries\Rhino.Mocks\3.6\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Should">
+      <HintPath>..\..\..\Libraries\Should\1.0\Should.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CustomerInfoScenarios\CustomerInfoImportScenario.cs" />
+    <Compile Include="MarketExports\DuplicateFileScenarios.cs" />
+    <Compile Include="MarketExports\Prism650Scenarios.cs" />
+    <Compile Include="MarketExports\Prism810Scenarios.cs" />
+    <Compile Include="MarketExports\Ssx814Scenarios.cs" />
+    <Compile Include="MarketImports\Xml867Scenarios.cs" />
+    <Compile Include="MarketImports\Xml997Scenarios.cs" />
+    <Compile Include="MarketImports\Xml824Scenarios.cs" />
+    <Compile Include="MarketImports\Xml814Scenarios.cs" />
+    <Compile Include="MarketExports\Prism814Scenarios.cs" />
+    <Compile Include="MarketImports\Xml248Scenarios.cs" />
+    <Compile Include="MarketImports\Xml650Scenarios.cs" />
+    <Compile Include="MarketImports\Handler814Scenarios.cs" />
+    <Compile Include="MarketImports\Prism650Scenarios.cs" />
+    <Compile Include="MarketImports\Prism810Scenarios.cs" />
+    <Compile Include="MarketImports\Prism814Scenarios.cs" />
+    <Compile Include="MarketImports\Xml810Scenarios.cs" />
+    <Compile Include="MarketImports\Xml820Scenarios.cs" />
+    <Compile Include="MarketImports\Prism867Scenarios.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransmitFileTaskTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\Ista.FileServices.Infrastructure\Ista.FileServices.Infrastructure.csproj">
+      <Project>{EB976E20-701F-4598-8C4D-ED1A6C40E77A}</Project>
+      <Name>Ista.FileServices.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Source\Ista.Miramar.Interfaces\Ista.Miramar.Interfaces.csproj">
+      <Project>{F57555C9-DA6A-456E-B562-03C806F98874}</Project>
+      <Name>Ista.Miramar.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

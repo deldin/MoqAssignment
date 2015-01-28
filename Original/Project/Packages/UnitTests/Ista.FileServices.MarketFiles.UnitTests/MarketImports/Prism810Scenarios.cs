@@ -1,0 +1,471 @@
+﻿using System.IO;
+using System.Linq;
+using System.Text;
+using Ista.FileServices.Infrastructure.Interfaces;
+using Ista.FileServices.MarketFiles.Interfaces;
+using Ista.FileServices.MarketFiles.Models;
+using Ista.FileServices.MarketFiles.Parsers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rhino.Mocks;
+
+namespace Ista.FileServices.MarketFiles.UnitTests.MarketImports
+{
+    [TestClass]
+    public class Prism810Scenarios
+    {
+        private IClientDataAccess clientDataAccess;
+        private ILogger logger;
+
+        private Import810Prism concern;
+
+        [TestInitialize]
+        public void StartUp()
+        {
+            clientDataAccess = MockRepository.GenerateMock<IClientDataAccess>();
+            clientDataAccess.Stub(x => x.IdentifyMarket(Arg<string>.Is.Anything))
+                .Return(1);
+
+            logger = MockRepository.GenerateStub<ILogger>();
+
+            concern = new Import810Prism(clientDataAccess, logger);
+        }
+
+        [TestMethod]
+        public void TX_SampleFile_Generic_Invoice()
+        {
+            // arrange
+            const string file = @"SH|SELTX007923311INV|97X1130121230425409984|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230425409984|979982802420130121204257028567|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049746862450|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|7.15|0.019007|KH|376||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.25|0.00066|KH|376||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.14|0.000374|KH|376||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|2.18|0.005803|KH|376||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|0.93|0.002481|KH|376||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|21.6|1|
+TL|1";
+
+            Import810Model context;
+
+            // act
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(file)))
+            {
+                var result = concern.Parse(stream);
+                context = result as Import810Model;
+            }
+
+            // assert
+            Assert.IsNotNull(context);
+            Assert.AreEqual(1, context.TransactionAuditCount);
+            Assert.AreEqual(1, context.TransactionActualCount);
+
+            var headers = context.TypeHeaders;
+            Assert.AreEqual(1, headers.Length);
+
+            var header = headers.First();
+            Assert.AreEqual("810", header.TransactionSetId);
+            Assert.AreEqual("20130121", header.TransactionDate);
+            Assert.AreEqual("97X1130121230425409984", header.InvoiceNbr);
+            Assert.AreEqual("979982802420130121204257028567", header.ReleaseNbr);
+            Assert.AreEqual("PR", header.TransactionTypeCode);
+            Assert.AreEqual("00", header.TransactionSetPurposeCode);
+            Assert.AreEqual("AEP TEXAS NORTH (ERCOT)", header.TdspName);
+            Assert.AreEqual("007923311", header.TdspDuns);
+            Assert.AreEqual("STARTEX POWER", header.CrName);
+            Assert.AreEqual("148055531", header.CrDuns);
+            Assert.AreEqual("20130225", header.PaymentDueDate);
+            Assert.AreEqual("10204049746862450", header.EsiId);
+            Assert.AreEqual(1, header.Details.Length);
+            Assert.AreEqual(1, header.Summaries.Length);
+
+            var detail = header.Details.First();
+            Assert.AreEqual("1", detail.AssignedId);
+            Assert.AreEqual("EL", detail.ServiceType);
+            Assert.AreEqual("RATE", detail.ServiceClass);
+            Assert.AreEqual("20121218", detail.ServicePeriodStartDate);
+            Assert.AreEqual("20130121", detail.ServicePeriodEndDate);
+            Assert.AreEqual("820", detail.RateClass);
+            Assert.AreEqual(1, detail.Items.Length);
+
+            //var item = detail.Items.First();
+            //Assert.AreEqual("1", item.AssignedId);
+            //Assert.AreEqual("0", item.Consumption);
+            //Assert.IsNull(item.ServiceOrderCompleteDate);
+            //Assert.IsNull(item.ServiceOrderNbr);
+            //Assert.IsNull(item.InvoiceNbr);
+            //Assert.IsNull(item.UnmeteredServiceDateRange);
+            //Assert.IsNull(item.EffectiveDate);
+            //Assert.AreEqual(8, item.Items.Length);
+
+            //var charge = item.Items.First();
+            //Assert.AreEqual("C", charge.ChargeIndicator);
+            //Assert.AreEqual("BAS001", charge.ChargeCode);
+            //Assert.AreEqual("294", charge.Amount);
+            //Assert.AreEqual("2.94", charge.Rate);
+            //Assert.AreEqual("EA", charge.UOM);
+            //Assert.AreEqual("1", charge.Quantity);
+            //Assert.AreEqual("Customer Charge", charge.Description);
+
+            var summary = header.Summaries.First();
+            Assert.AreEqual("21.6", summary.TotalAmount);
+        }
+
+        [TestMethod]
+        public void TX_SampleFile_Two_Details_With_Service_Orders()
+        {
+            // arrange
+            const string file = @"SH|ACTTX007923311INV|97X1130205224249857689|I|
+01|ACTTX007923311INV|TX|20130205|97X1130205224249857689|978935551620130205211637959637|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|ACCENT ENERGY|133305370|||20130312||||||||||||||||||||||||||||10204049722094690|201302060941|
+10|ACTTX007923311INV|1|EL|RATE||20130107|20130205||||820|
+40|ACTTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|ACTTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|ACTTX007923311INV|1|C||DIS001|26.63|0.019007|KH|1401||Distribution System Charge||||||0|
+40|ACTTX007923311INV|1|C||MSC024|0.92|0.00066|KH|1401||System Benefit Fund (SBF)||||||0|
+40|ACTTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|ACTTX007923311INV|1|C||MSC041|0.52|0.000374|KH|1401||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|ACTTX007923311INV|1|C||TRN001|8.13|0.005803|KH|1401||Transmission Service Charge||||||0|
+40|ACTTX007923311INV|1|C||TRN002|3.48|0.002481|KH|1401||Transmission Cost Recovery Factor||||||0|
+10|ACTTX007923311INV|2|EL|ACCOUNT||20130107|20130205|
+40|ACTTX007923311INV|1|C||SER024|1|1|EA|1||Disconnect at Meter||20130109|8388674|||0|
+60|ACTTX007923311INV|51.63|2|
+TL|1";
+
+            Import810Model context;
+
+            // act
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(file)))
+            {
+                var result = concern.Parse(stream);
+                context = result as Import810Model;
+            }
+
+            // assert
+            Assert.IsNotNull(context);
+            Assert.AreEqual(1, context.TransactionAuditCount);
+            Assert.AreEqual(1, context.TransactionActualCount);
+
+            var headers = context.TypeHeaders;
+            Assert.AreEqual(1, headers.Length);
+
+            var header = headers.First();
+            Assert.AreEqual("810", header.TransactionSetId);
+            Assert.AreEqual("20130205", header.TransactionDate);
+            Assert.AreEqual("97X1130205224249857689", header.InvoiceNbr);
+            Assert.AreEqual("978935551620130205211637959637", header.ReleaseNbr);
+            Assert.AreEqual("PR", header.TransactionTypeCode);
+            Assert.AreEqual("00", header.TransactionSetPurposeCode);
+            Assert.AreEqual("AEP TEXAS NORTH (ERCOT)", header.TdspName);
+            Assert.AreEqual("007923311", header.TdspDuns);
+            Assert.AreEqual("ACCENT ENERGY", header.CrName);
+            Assert.AreEqual("133305370", header.CrDuns);
+            Assert.AreEqual("20130312", header.PaymentDueDate);
+            Assert.AreEqual("10204049722094690", header.EsiId);
+            Assert.AreEqual(2, header.Details.Length);
+            Assert.AreEqual(1, header.Summaries.Length);
+
+            var detail = header.Details.First();
+            Assert.AreEqual("1", detail.AssignedId);
+            Assert.AreEqual("EL", detail.ServiceType);
+            Assert.AreEqual("SV", detail.ServiceTypeCode);
+            Assert.AreEqual("RATE", detail.ServiceClass);
+            Assert.AreEqual("C3", detail.ServiceClassCode);
+            Assert.AreEqual("20130107", detail.ServicePeriodStartDate);
+            Assert.AreEqual("20130205", detail.ServicePeriodEndDate);
+            Assert.AreEqual("820", detail.RateClass);
+            Assert.AreEqual(1, detail.Items.Length);
+
+            var item = detail.Items.First();
+            Assert.AreEqual("1", item.AssignedId);
+            Assert.AreEqual("0", item.Consumption);
+            Assert.IsNull(item.ServiceOrderCompleteDate);
+            Assert.IsNull(item.ServiceOrderNbr);
+            Assert.IsNull(item.InvoiceNbr);
+            Assert.IsNull(item.UnmeteredServiceDateRange);
+            Assert.IsNull(item.EffectiveDate);
+            //Assert.AreEqual(8, item.Items.Length);
+
+            //var charge = item.Items.First();
+            //Assert.AreEqual("C", charge.ChargeIndicator);
+            //Assert.AreEqual("EU", charge.AgencyCode);
+            //Assert.AreEqual("BAS001", charge.ChargeCode);
+            //Assert.AreEqual("294", charge.Amount);
+            //Assert.AreEqual("2.94", charge.Rate);
+            //Assert.AreEqual("EA", charge.UOM);
+            //Assert.AreEqual("1", charge.Quantity);
+            //Assert.AreEqual("Customer Charge", charge.Description);
+
+            var secondDetail = header.Details.Last();
+            var secondItem = secondDetail.Items.First();
+            Assert.AreEqual("1", secondItem.AssignedId);
+            Assert.AreEqual("20130109", secondItem.ServiceOrderCompleteDate);
+            Assert.AreEqual("8388674", secondItem.ServiceOrderNbr);
+            Assert.AreEqual("0", secondItem.Consumption);
+
+            var summary = header.Summaries.First();
+            Assert.AreEqual("51.63", summary.TotalAmount);
+        }
+
+        [TestMethod]
+        public void TX_SampleFile_Multiple_Transactions()
+        {
+            // arrange
+            #region large file content
+            const string file = @"SH|SELTX007923311INV|97X1130121230317856567|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230317856567|978769913420130121204253019926|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049780484441|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|32.14|0.019007|KH|1691||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|1.12|0.00066|KH|1691||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.63|0.000374|KH|1691||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|9.81|0.005803|KH|1691||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|4.2|0.002481|KH|1691||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|58.85|1|
+SH|SELTX007923311INV|97X1130121230318829800|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230318829800|978787802320130121204253098343|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049791503871|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|9.22|0.019007|KH|485||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.32|0.00066|KH|485||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.18|0.000374|KH|485||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|2.81|0.005803|KH|485||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|1.2|0.002481|KH|485||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|24.68|1|
+SH|SELTX007923311INV|97X1130121230319415042|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230319415042|978800691220130121204253119921|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049797468520|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|9.48|0.019007|KH|499||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.33|0.00066|KH|499||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.19|0.000374|KH|499||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|2.9|0.005803|KH|499||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|1.24|0.002481|KH|499||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|25.09|1|
+SH|SELTX007923311INV|97X1130121230324517265|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230324517265|978881582020130121204253487281|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049783976570|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|19.82|0.019007|KH|1043||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.69|0.00066|KH|1043||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.39|0.000374|KH|1043||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|6.05|0.005803|KH|1043||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|2.59|0.002481|KH|1043||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|40.49|1|
+SH|SELTX007923311INV|97X1130121230328068233|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230328068233|978939652320130121204253691849|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049785064041|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||836|
+40|SELTX007923311INV|1|C||BAS001|4.25|4.25|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|18.68|18.68|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|38.52|3.21|RA|12||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC039|1.46|1.46|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+60|SELTX007923311INV|62.91|1|
+SH|SELTX007923311INV|97X1130121230333202068|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230333202068|979028913620130121204253992366|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049755454690|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|27.86|0.019007|KH|1466||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.97|0.00066|KH|1466||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.55|0.000374|KH|1466||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|8.51|0.005803|KH|1466||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|3.64|0.002481|KH|1466||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|52.48|1|
+SH|SELTX007923311INV|97X1130121230335774125|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230335774125|979084402020130121204254226585|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049780392010|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|87.07|0.019007|KH|4581||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|3.02|0.00066|KH|4581||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|1.71|0.000374|KH|4581||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|26.58|0.005803|KH|4581||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|11.37|0.002481|KH|4581||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|140.7|1|
+SH|SELTX007923311INV|97X1130121230336472735|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230336472735|979097955320130121204254272602|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049792850029|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||829|
+40|SELTX007923311INV|1|C||BAS001|4.25|4.25|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|7.5|7.5|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||MSC039|4.4|4.4|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+60|SELTX007923311INV|16.15|1|
+SH|SELTX007923311INV|97X1130121230344247530|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230344247530|979233650120130121204254772043|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049779986520|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|54.34|0.019007|KH|2859||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|1.89|0.00066|KH|2859||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|1.07|0.000374|KH|2859||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|16.59|0.005803|KH|2859||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|7.09|0.002481|KH|2859||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|91.93|1|
+SH|SELTX007923311INV|97X1130121230350042176|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230350042176|979332403620130121204255037242|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049761162820|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|4.58|0.019007|KH|241||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.16|0.00066|KH|241||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.09|0.000374|KH|241||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|1.4|0.005803|KH|241||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|0.6|0.002481|KH|241||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|17.78|1|
+SH|SELTX007923311INV|97X1130121230352072526|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230352072526|979370471020130121204255150719|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049754987540|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||836|
+40|SELTX007923311INV|1|C||BAS001|4.25|4.25|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|18.68|18.68|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|67.41|3.21|RA|21||Distribution System Charge||||||0.84|
+40|SELTX007923311INV|1|C||MSC024|0.18|0.000657|KH|271||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|1.46|1.46|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.14|0.000503|KH|271||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|1|1.245|K1|0.8||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|0.4|0.502821|K1|0.8||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|93.52|1|
+SH|SELTX007923311INV|97X1130121230352942086|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230352942086|979387802420130121204255206020|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049791483120|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|1.5|0.019007|KH|79||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.05|0.00066|KH|79||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.03|0.000374|KH|79||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|0.46|0.005803|KH|79||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|0.2|0.002481|KH|79||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|13.19|1|
+SH|SELTX007923311INV|97X1130121230353732015|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230353732015|979402443520130121204255268659|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049712294240|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||829|
+40|SELTX007923311INV|1|C||BAS001|4.25|4.25|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|7.5|7.5|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|102.46|0.031948|KH|3207||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|2.12|0.00066|KH|3207||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|4.4|4.4|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.62|0.000192|KH|3207||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|10.1|0.003148|KH|3207||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|4.42|0.001379|KH|3207||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|135.87|1|
+SH|SELTX007923311INV|97X1130121230354425331|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230354425331|979421372520130121204255321027|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049726010791|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|4.73|0.019007|KH|249||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.16|0.00066|KH|249||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.09|0.000374|KH|249||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|1.44|0.005803|KH|249||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|0.62|0.002481|KH|249||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|17.99|1|
+SH|SELTX007923311INV|97X1130121230355690750|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230355690750|979438702420130121204255386414|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049703267151|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|11.1|0.019007|KH|584||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.39|0.00066|KH|584||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.22|0.000374|KH|584||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|3.39|0.005803|KH|584||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|1.45|0.002481|KH|584||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|27.5|1|
+SH|SELTX007923311INV|97X1130121230359225444|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230359225444|979513802220130121204255682875|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049748900200|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|12.41|0.019007|KH|653||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.43|0.00066|KH|653||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.24|0.000374|KH|653||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|3.79|0.005803|KH|653||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|1.62|0.002481|KH|653||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|29.44|1|
+SH|SELTX007923311INV|97X1130121230404032112|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230404032112|979612471020130121204255961108|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049779081421|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||903|
+40|SELTX007923311INV|1|C||DIS001|3.24|0.0289286|KH|112||Distribution System Charge|||||20121218-20130121|0|
+40|SELTX007923311INV|1|C||MSC024|0.07|0.000625|KH|112||System Benefit Fund (SBF)|||||20121218-20130121|0|
+40|SELTX007923311INV|1|C||ODL005|8.64|2.16|EA|4||Outdoor Lighting - Facilities |||||20121218-20130121|0|
+40|SELTX007923311INV|1|C||TRN001|0.36|0.0032143|KH|112||Transmission Service Charge|||||20121218-20130121|0|
+40|SELTX007923311INV|1|C||TRN002|0.15|0.0013393|KH|112||Transmission Cost Recovery Factor|||||20121218-20130121|0|
+60|SELTX007923311INV|12.46|1|
+SH|SELTX007923311INV|97X1130121230409265108|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230409265108|979695302520130121204256190761|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049708373290|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|17.92|0.019007|KH|943||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.62|0.00066|KH|943||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.35|0.000374|KH|943||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|5.47|0.005803|KH|943||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|2.34|0.002481|KH|943||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|37.65|1|
+SH|SELTX007923311INV|97X1130121230411969952|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230411969952|979735902620130121204256334259|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049786049350|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|23.85|0.019007|KH|1255||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.83|0.00066|KH|1255||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.47|0.000374|KH|1255||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|7.28|0.005803|KH|1255||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|3.11|0.002481|KH|1255||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|46.49|1|
+SH|SELTX007923311INV|97X1130121230425409984|I|
+01|SELTX007923311INV|TX|20130121|97X1130121230425409984|979982802420130121204257028567|PR|00||||||||||||AEP TEXAS NORTH (ERCOT)|007923311|STARTEX POWER|148055531|||20130225||||||||||||||||||||||||||||10204049746862450|201301221326|
+10|SELTX007923311INV|1|EL|RATE||20121218|20130121||||820|
+40|SELTX007923311INV|1|C||BAS001|2.94|2.94|EA|1||Customer Charge||||||0|
+40|SELTX007923311INV|1|C||BAS003|5.24|5.24|EA|1||Metering Charge||||||0|
+40|SELTX007923311INV|1|C||DIS001|7.15|0.019007|KH|376||Distribution System Charge||||||0|
+40|SELTX007923311INV|1|C||MSC024|0.25|0.00066|KH|376||System Benefit Fund (SBF)||||||0|
+40|SELTX007923311INV|1|C||MSC039|2.77|2.77|MO|1||ADVANCED METERING COST RECOVERY FAC||||||0|
+40|SELTX007923311INV|1|C||MSC041|0.14|0.000374|KH|376||ENERGY EFFICIENCY COST RECOVERY||||||0|
+40|SELTX007923311INV|1|C||TRN001|2.18|0.005803|KH|376||Transmission Service Charge||||||0|
+40|SELTX007923311INV|1|C||TRN002|0.93|0.002481|KH|376||Transmission Cost Recovery Factor||||||0|
+60|SELTX007923311INV|21.6|1|
+TL|20";
+            #endregion
+
+            Import810Model context;
+
+            // act
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(file)))
+            {
+                var result = concern.Parse(stream);
+                context = result as Import810Model;
+            }
+
+            // assert
+            Assert.IsNotNull(context);
+            Assert.AreEqual(20, context.TransactionAuditCount);
+            Assert.AreEqual(20, context.TransactionActualCount);
+
+            var headers = context.TypeHeaders;
+            Assert.AreEqual(20, headers.Length);
+
+            var lastHeader = headers.Last();
+            Assert.AreEqual(1, lastHeader.Summaries.Length);
+
+            var lastSummary = lastHeader.Summaries.Last();
+            Assert.AreEqual("21.6", lastSummary.TotalAmount);
+        }
+    }
+}
